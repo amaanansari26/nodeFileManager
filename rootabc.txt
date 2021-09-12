@@ -1,0 +1,8 @@
+function(err){
+		if(err){
+			output=err
+		}
+		else{
+			output=done
+		}
+	}

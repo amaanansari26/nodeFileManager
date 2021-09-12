@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<style type="text/css">
+		html, body {
+			height: 100%;
+		}
+
+
+		.fullh{
+			height: 100vh;
+		}
+		.mar{
+			margin-top: 2vh;
+		}
+		.invisible{
+			visibility: hidden;
+		}
+		.ff{
+			cursor: pointer;
+			color: #74b9ff;
+		}
+	</style>
+</head>
+<body>
+	<!-- Navbar goes here -->
+	<nav>
+		<div class="nav-wrapper center-align">
+			<a href="#" class="brand-logo">File Manager</a>
+
+		</div>
+	</nav>
+
+	<!-- Page Layout here -->
+	<div class="row">
+
+		<div class="col s3 red accent-2 fullh center-align">
+
+			<a class="waves-effect waves-light btn-large mar" id="open">OPEN</a><br>
+			<a class="waves-effect waves-light btn-large mar" id="back">BACK</a><br>
+		<a class='dropdown-trigger btn-large mar' href='#' data-target='dropdown1'>CREATE</a><br>
+			<a class="waves-effect waves-light btn-large mar" id="del">DELETE</a><br>
+			<a class="waves-effect waves-light btn-large mar">EDIT</a><br>
+			<a class="waves-effect waves-light btn-large mar">COPY</a><br>
+			<a class="waves-effect waves-light btn-large mar">MOVE</a><br>
+			<a class="waves-effect waves-light btn-large mar">RENAME</a><br>
+
+			<!-- Dropdown Trigger -->
+  
+
+  <!-- Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+  <input type="text" name="" id="createf"><input type="submit" name="" class="btn" style="width: 100%" onclick="create()">
+  </ul>
+
+		</div>
+
+		<div class="col s9" style="height: 100%">
+			<div class="row">
+
+  <!-- Dropdown Trigger -->
+  <a class='dropdown-trigger btn' href='#' data-target='ffop' id="tb">Drop Me!</a>
+
+  <!-- Dropdown Structure -->
+  <ul id='ffop' class='dropdown-content'>
+    <li><a href="#!">OPEN</a></li>
+    <li><a href="#!">EDIT</a></li>
+    <li><a href="#!">COPY</a></li>
+    <li><a href="#!">MOVE</a></li>
+    <li><a href="#!">RENAME</a></li>
+    
+    
+  </ul>
+        
+
+			</div>
+			<%for(i=0;i<dirs.length;i++){%>
+
+			<div class="col s3 mar center-align ff dropdown-trigger" data-target='ffop'><i class="large material-icons">folder</i><p><%=dirs[i]%></p></div>
+			<%}%>
+
+
+
+		</div>
+
+	</div>
+
+
+	<form method="POST" action="/" class="ninvisible" id="frm">
+		<input type="text" name="command" id="com">
+		<input type="submit"></form>
+		<p><%=output%></p>
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+		<script type="text/javascript">
+			var selected="na"
+			
+/////////////////////////////////////////////////////////////////////////////////////
+//var elems = document.querySelectorAll('.dropdown-trigger');
+			document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.dropdown-trigger');
+    var a=document.querySelectorAll('.ff');
+    var instances = M.Dropdown.init(elems,{closeOnClick:false});
+    for(var i=0;i<a.length;a++){
+    	var ints=M.Dropdown.getInstance(a[i]);
+    	ints.destroy()
+
+    }
+    
+
+  });
+///////////////////////////////////////////////////////////////////////////////////
+			var form=document.getElementById("frm")
+			var com=document.getElementById("com")
+			var open=document.getElementById("open")
+			var back=document.getElementById("back")
+			var del=document.getElementById("del")
+			var createf=document.getElementById("createf")
+			var tb=document.getElementById("tb")
+function create(){
+	//alert(createf.value)
+	if(createf.value!=""||createf.value){
+		post("mkdir "+createf.value);
+					setTimeout(function(){
+						document.location.href="http://localhost/"
+					},1000)
+	}
+
+}
+tb.addEventListener("contextmenu",function(){
+	var ev=window.event
+	ev.preventDefault();
+	console.log("hhh")
+})
+
+			open.addEventListener("click",function(){
+				if(selected!="na"){
+					post("cd "+selected);
+					setTimeout(function(){
+						document.location.href="http://localhost/"
+					},1000)
+
+
+				}
+			})
+			back.addEventListener("click",function(){
+				post("cd ..");
+				
+				setTimeout(function(){
+						document.location.href="http://localhost/"
+					},1000)
+
+
+			})
+			del.addEventListener("click",function(){
+				post("del "+selected);
+				
+				setTimeout(function(){
+						document.location.href="http://localhost/"
+					},1000)
+
+
+			})
+    		//com.value
+    		//form.submit()
+    		var ff=document.getElementsByClassName("ff")
+    		var xhttp = new XMLHttpRequest();
+    		function uselect(){
+    			for(var i=0;i<ff.length;i++){
+    				ff[i].select=false;
+    				ff[i].style.background="";
+    			}
+    		}
+
+    		function post(com){
+    			xhttp.open("POST", "/", true);
+    			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    			xhttp.send("command="+com);
+    			setTimeout(function(){
+						document.location.href="http://localhost/"
+					},1000)
+    		}
+
+    		for(i=0;i<ff.length;i++){
+    			ff[i].addEventListener("click",function(){
+    				var a=this.select;
+    				uselect();
+    				this.select=!(a)
+    				if(this.select==true){
+    					selected=this.children[1].innerText
+    					this.style.background="#bdc3c7"
+    				}
+    				else{
+    					selected="na"
+    				}
+    				//var inst=M.Dropdown.getInstance(this);
+    				//instance.close();
+
+    			})
+    			ff[i].addEventListener("contextmenu",function(){
+    				var a=this.select;
+    				var ev=window.event
+					ev.preventDefault();
+    				uselect();
+    				this.select=!(a)
+    				if(this.select==true){
+    					selected=this.children[1].innerText
+    					this.style.background="#bdc3c7"
+    				}
+    				else{
+    					selected="na"
+    				}
+    				M.Dropdown.init(this,{closeOnClick:false});
+    				var inst=M.Dropdown.getInstance(this);
+    				inst.open()
+    				setTimeout(function(){inst.destroy()},1000)
+
+    			})
+    		}
+    		
+
+
+
+
+    	</script>
+
+
+    </body>
+    </html>

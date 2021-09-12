@@ -1,0 +1,32 @@
+<div style="margin: auto 35%"><h1>TERMINAL</h1>
+
+<form method="POST" action="/">
+	Command:<input type="text" name="command">
+	<input type="submit">
+</form>
+<h4>Output:</h4><p><%=output%></p></div>
+
+<hr>
+<h3 style="text-align: center;">Logs:</h3>
+
+
+
+
+
+
+<ul style="list-style-type: urdu;">
+	<%for(i=logs.length-1;i!=0;i--){%>
+	<li><%=logs[i]%></li>
+<%}%>
+</ul>
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var inp=document.getElementsByTagName("input")[0]
+	inp.select()
+</script>
